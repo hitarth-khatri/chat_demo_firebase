@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: Colors.orangeAccent,
+        colorSchemeSeed: Colors.orange,
       ),
       home: const SplashScreen(),
       getPages: AppPages.pages,

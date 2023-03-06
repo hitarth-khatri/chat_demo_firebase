@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Routes.routeUser,
             )
           : Get.offNamed(
-              Routes.routeHome,
+              Routes.routeLogin,
             );
     });
     super.initState();

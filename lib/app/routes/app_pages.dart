@@ -1,24 +1,32 @@
-import 'package:chat_demo_firebase/app/user/view/user_screen.dart';
+import 'package:chat_demo_firebase/app/chat/view/chat_screen.dart';
+import 'package:chat_demo_firebase/app/login/view/login_screen.dart';
 import 'package:get/get.dart';
-import '../home/binding/home_binding.dart';
-import '../home/view/home_screen.dart';
-import '../user/binding/user_binding.dart';
+import '../chat/binding/chat_binding.dart';
+import '../login/binding/login_binding.dart';
+import '../users/binding/users_binding.dart';
+import '../users/view/users_screen.dart';
 import 'app_routes.dart';
 
 class AppPages {
   static final pages = [
     ///home screen
     GetPage(
-      name: Routes.routeHome,
-      page: () => const HomeScreen(),
-      binding: HomeBinding(),
+      name: Routes.routeLogin,
+      page: () => const LoginScreen(),
+      binding: LoginBinding(),
     ),
 
     ///user screen
     GetPage(
       name: Routes.routeUser,
-      page: () => const UserScreen(),
-      binding: UserBinding(),
+      page: () => const UsersScreen(),
+      binding: UsersBinding(),
+    ),
+    ///chat screen
+    GetPage(
+      name: Routes.routeChat,
+      page: () => const ChatScreen(),
+      binding: ChatBinding(),
     ),
   ];
 }
