@@ -45,7 +45,7 @@ class ChatScreen extends GetView<ChatController> {
                           chatTile(
                             alignment: Alignment.centerRight,
                             width: width,
-                            message: messageMap["message"],
+                            message: messageMap["message"] ?? "",
                           ),
                         ],
                       )
@@ -57,7 +57,7 @@ class ChatScreen extends GetView<ChatController> {
                           chatTile(
                             alignment: Alignment.centerLeft,
                             width: width,
-                            message: messageMap["message"],
+                            message: messageMap["message"] ?? "",
                           ),
                         ],
                       );

@@ -11,15 +11,15 @@ class ChatController extends GetxController {
   late Query dbQuery;
   String chatRoomId = "";
 
-  var senderId = Get.arguments["senderId"];
-  String senderEmail = Get.arguments["senderEmail"];
-  String senderName = Get.arguments["senderName"];
-  String senderProfile = Get.arguments["senderProfile"];
+  var senderId = Get.arguments["senderId"] ?? "";
+  String senderEmail = Get.arguments["senderEmail"] ?? "";
+  String senderName = Get.arguments["senderName"] ?? "";
+  String senderProfile = Get.arguments["senderProfile"] ?? "";
 
-  var receiverId = Get.arguments["receiverId"];
-  String receiverEmail = Get.arguments["receiverEmail"];
-  String receiverName = Get.arguments["receiverName"];
-  String receiverProfile = Get.arguments["receiverProfile"];
+  var receiverId = Get.arguments["receiverId"] ?? "";
+  String receiverEmail = Get.arguments["receiverEmail"] ?? "";
+  String receiverName = Get.arguments["receiverName"] ?? "";
+  String receiverProfile = Get.arguments["receiverProfile"] ?? "";
 
   @override
   void onInit() {
