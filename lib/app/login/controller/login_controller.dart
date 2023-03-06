@@ -1,8 +1,8 @@
 import 'package:chat_demo_firebase/common/constants/app_strings.dart';
 import 'package:chat_demo_firebase/common/constants/firebase_constants.dart';
 import 'package:chat_demo_firebase/common/enum/loading_status.dart';
+import 'package:chat_demo_firebase/common/widgets/common_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,9 +12,7 @@ import '../../routes/app_routes.dart';
 class LoginController extends GetxController {
   @override
   void onInit() {
-    if (kDebugMode) {
-      print(firebaseAuth.currentUser?.email);
-    }
+    printDebug(value: firebaseAuth.currentUser?.email);
     super.onInit();
   }
 
@@ -43,8 +41,9 @@ class LoginController extends GetxController {
       await firebaseAuth.signInWithCredential(credential);
 
       currentUser = firebaseAuth.currentUser;
+      printDebug(value: "uid: ${currentUser?.uid}");
 
-      print("uid: ${currentUser?.uid}");
+      //add user to firestore
       if (currentUser != null && await isNewUser(currentUser!.uid)) {
         await FirebaseConstants.usersCollection.add({
           'uid': currentUser?.uid,
@@ -52,27 +51,24 @@ class LoginController extends GetxController {
           'email': currentUser?.email,
           'photo': currentUser?.photoURL,
         });
-        if (kDebugMode) {
-          print("${currentUser?.email} added");
-        }
+
+        printDebug(value: "${currentUser?.email} added");
       } else {
-        if (kDebugMode) {
-          print("${currentUser?.email} already exist");
-        }
+        printDebug(value: "${currentUser?.email} already exist");
       }
 
+      //navigate to user screen
       Get.offNamed(Routes.routeUser);
       loginStatus.value = LoadStatus.success;
       Get.rawSnackbar(
         title: AppStrings.success,
         message: AppStrings.loggedInSuccess,
       );
+
       return;
     } catch (e) {
       loginStatus.value = LoadStatus.failure;
-      if (kDebugMode) {
-        print(e);
-      }
+      printDebug(value: e);
     }
   }
 
@@ -82,7 +78,7 @@ class LoginController extends GetxController {
         .where('uid', isEqualTo: uid)
         .limit(1)
         .get();
-    print("result: ${result.size}");
+    printDebug(value: "result: ${result.size}");
     return result.size == 0;
   }
 }

@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:chat_demo_firebase/common/constants/app_colors.dart';
+import 'package:chat_demo_firebase/common/widgets/common_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,7 +20,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    googleSignIn.isSignedIn().then((value) => debugPrint("logged in: $value"));
+    googleSignIn.isSignedIn().then(
+          (value) => printDebug(value: "logged in: $value"),
+        );
 
     Timer(const Duration(seconds: 2), () async {
       await googleSignIn.isSignedIn()
@@ -35,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.indigo[100],
+      color: AppColors.indigo100,
       child: const Center(
         child: CircularProgressIndicator(),
       ),

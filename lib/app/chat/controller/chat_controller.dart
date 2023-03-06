@@ -1,3 +1,5 @@
+import 'package:chat_demo_firebase/app/chat/model/message_model.dart';
+import 'package:chat_demo_firebase/common/constants/app_strings.dart';
 import 'package:chat_demo_firebase/common/constants/firebase_constants.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,25 +41,29 @@ class ChatController extends GetxController {
   sendMessage() {
     removeFocus();
     if (msgController.text.trim().isNotEmpty) {
-      Map<String, dynamic> message = {
-        "senderId": senderId,
-        "senderEmail": senderEmail,
-        "senderName": senderName,
-        "senderProfile": senderProfile,
-        "receiverId": receiverId,
-        "receiverEmail": receiverEmail,
-        "receiverName": receiverName,
-        "receiverProfile": receiverProfile,
-        "message": msgController.text,
-        "sentTime": "${DateTime.now()}",
-      };
-      FirebaseConstants.databaseReference.child(chatRoomId).push().set(message);
+      final message = MessageModel(
+        senderId: senderId,
+        senderEmail: senderEmail,
+        senderName: senderName,
+        senderProfile: senderProfile,
+        receiverId: receiverId,
+        receiverEmail: receiverEmail,
+        receiverName: receiverName,
+        receiverProfile: receiverProfile,
+        message: msgController.text,
+        sentTime: "${DateTime.now()}",
+      );
+
+      FirebaseConstants.databaseReference
+          .child(chatRoomId)
+          .push()
+          .set(message.toJson());
       printDebug(value: "sent message");
       msgController.clear();
     } else {
       Get.snackbar(
-        "Invalid",
-        "Field can't be empty",
+        AppStrings.invalid,
+        AppStrings.invalidMsg,
         duration: const Duration(milliseconds: 800),
       );
       printDebug(value: "empty message");

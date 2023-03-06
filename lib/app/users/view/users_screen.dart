@@ -30,6 +30,7 @@ class UsersScreen extends GetView<UsersController> {
                 primary: false,
                 children: [
                   DrawerHeader(
+                    //user details
                     child: Row(
                       children: [
                         CircleAvatar(
@@ -43,6 +44,7 @@ class UsersScreen extends GetView<UsersController> {
                       ],
                     ),
                   ),
+                  //log out
                   ListTile(
                     title: const Text(AppStrings.logOutStr),
                     leading: AppIcons.logoutIcon,
@@ -51,6 +53,7 @@ class UsersScreen extends GetView<UsersController> {
                 ],
               ),
             ),
+            //users list
             body: StreamBuilder<QuerySnapshot>(
               stream: FirebaseConstants.usersCollection.snapshots(),
               builder: (context, snapshot) {

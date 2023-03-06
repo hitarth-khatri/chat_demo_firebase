@@ -12,6 +12,8 @@ class AppStrings {
   static const confirmStr = "Confirm";
   static const logOutMsg = "Are you sure want to log out?";
 
+  static const invalid = "Invalid";
+  static const invalidMsg = "Field can't be empty";
   static const yesStr = "Yes";
   static const noStr = "No";
   static const exitMsg = "Sure want to exit?";
