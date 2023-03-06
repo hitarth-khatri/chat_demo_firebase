@@ -4,21 +4,39 @@ import 'package:chat_demo_firebase/common/widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-Widget usersListTile(
-    {required String profileImage,
-    required String email,
-    required String name}) {
+Widget usersListTile({
+  required senderId,
+  required String senderEmail,
+  required String senderName,
+  required String senderProfile,
+  required receiverId,
+  required String receiverEmail,
+  required String receiverName,
+  required String receiverProfile,
+}) {
   return ListTile(
     leading: CircleAvatar(
-      backgroundImage: NetworkImage(profileImage),
-      radius: 20,
+      backgroundImage: NetworkImage(receiverProfile),
+      radius: 25,
     ),
-    title: Text(email),
-    subtitle: Text(name),
+    title: Text(receiverEmail),
+    subtitle: Text(receiverName),
     trailing: IconButton(
       onPressed: () {
         printDebug(value: "Chat screen");
-        Get.toNamed(Routes.routeChat);
+        Get.toNamed(
+          Routes.routeChat,
+          arguments: {
+            "senderId": senderId,
+            "senderEmail": senderEmail,
+            "senderName": senderName,
+            "senderProfile": senderProfile,
+            "receiverId": receiverId,
+            "receiverEmail": receiverEmail,
+            "receiverName": receiverName,
+            "receiverProfile": receiverProfile,
+          },
+        );
       },
       icon: AppIcons.messageIcon,
     ),

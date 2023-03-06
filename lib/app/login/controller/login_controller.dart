@@ -1,3 +1,4 @@
+import 'package:chat_demo_firebase/common/constants/app_strings.dart';
 import 'package:chat_demo_firebase/common/constants/firebase_constants.dart';
 import 'package:chat_demo_firebase/common/enum/loading_status.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -62,7 +63,10 @@ class LoginController extends GetxController {
 
       Get.offNamed(Routes.routeUser);
       loginStatus.value = LoadStatus.success;
-
+      Get.rawSnackbar(
+        title: AppStrings.success,
+        message: AppStrings.loggedInSuccess,
+      );
       return;
     } catch (e) {
       loginStatus.value = LoadStatus.failure;
