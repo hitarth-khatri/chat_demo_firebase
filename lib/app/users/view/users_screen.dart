@@ -2,6 +2,7 @@ import 'package:chat_demo_firebase/common/constants/firebase_constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_database/firebase_database.dart' as real_db;
 
 import '../../../common/constants/app_icons.dart';
 import '../../../common/constants/app_strings.dart';
@@ -70,6 +71,18 @@ class UsersScreen extends GetView<UsersController> {
                           itemBuilder: (context, index) {
                             DocumentSnapshot document =
                                 snapshot.data!.docs[index];
+                            if (controller.currentUser!.uid.hashCode <=
+                                document["uid"].hashCode) {
+                              controller.chatRoomId.value =
+                                  '${controller.currentUser!.uid.hashCode}-${document["uid"]}';
+                            } else {
+                              controller.chatRoomId.value =
+                                  '${document["uid"]}-${controller.currentUser!.uid.hashCode}';
+                            }
+
+                            real_db.Query dbQuery = FirebaseConstants
+                                .databaseReference
+                                .child(controller.chatRoomId.value);
                             return document["uid"] ==
                                     controller.currentUser?.uid
                                 ? Container()

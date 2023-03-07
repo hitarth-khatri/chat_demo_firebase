@@ -10,6 +10,8 @@ class UsersController extends GetxController {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   late final currentUser = firebaseAuth.currentUser;
 
+  final chatRoomId = "".obs;
+
   ///log out dialog
   logoutGoogle() {
     return Get.defaultDialog(

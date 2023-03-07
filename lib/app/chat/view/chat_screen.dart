@@ -26,6 +26,7 @@ class ChatScreen extends GetView<ChatController> {
         ),
         body: FirebaseAnimatedList(
           primary: false,
+          reverse: true,
           padding: const EdgeInsets.all(5),
           defaultChild: const Center(child: CircularProgressIndicator()),
           query: controller.dbQuery,
@@ -58,7 +59,7 @@ class ChatScreen extends GetView<ChatController> {
                     ],
                   );
           },
-        ),
+        ).paddingOnly(bottom: 80),
         //send message text field
         bottomSheet: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

@@ -51,7 +51,7 @@ class ChatController extends GetxController {
         receiverName: receiverName,
         receiverProfile: receiverProfile,
         message: msgController.text,
-        sentTime: "${DateTime.now()}",
+        sentTime: DateTime.now(),
       );
 
       FirebaseConstants.databaseReference

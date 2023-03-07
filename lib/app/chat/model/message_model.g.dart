@@ -16,11 +16,11 @@ MessageModel _$MessageModelFromJson(Map<dynamic, dynamic> json) => MessageModel(
       receiverName: json['receiverName'] as String,
       receiverProfile: json['receiverProfile'] as String,
       message: json['message'] as String,
-      sentTime: json['sentTime'] as String,
+      sentTime: DateTime.parse(json['sentTime'] as String),
     );
 
-Map<dynamic, dynamic> _$MessageModelToJson(MessageModel instance) =>
-    <dynamic, dynamic>{
+Map<String, dynamic> _$MessageModelToJson(MessageModel instance) =>
+    <String, dynamic>{
       'senderId': instance.senderId,
       'senderEmail': instance.senderEmail,
       'senderName': instance.senderName,
@@ -30,5 +30,5 @@ Map<dynamic, dynamic> _$MessageModelToJson(MessageModel instance) =>
       'receiverName': instance.receiverName,
       'receiverProfile': instance.receiverProfile,
       'message': instance.message,
-      'sentTime': instance.sentTime,
+      'sentTime': instance.sentTime.toIso8601String(),
     };

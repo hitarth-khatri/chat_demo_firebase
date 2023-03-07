@@ -15,7 +15,7 @@ class MessageModel {
   String receiverProfile;
 
   String message;
-  String sentTime;
+  DateTime sentTime;
 
   MessageModel({
     required this.senderId,
