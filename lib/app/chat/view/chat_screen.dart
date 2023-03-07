@@ -1,6 +1,7 @@
 import 'package:chat_demo_firebase/app/chat/controller/chat_controller.dart';
 import 'package:chat_demo_firebase/app/chat/model/message_model.dart';
 import 'package:chat_demo_firebase/common/constants/app_colors.dart';
+import 'package:chat_demo_firebase/common/constants/app_icons.dart';
 import 'package:chat_demo_firebase/common/widgets/chat_tile.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +61,7 @@ class ChatScreen extends GetView<ChatController> {
                   );
           },
         ).paddingOnly(bottom: 80),
+
         //send message text field
         bottomSheet: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -73,7 +75,7 @@ class ChatScreen extends GetView<ChatController> {
                 onPressed: () {
                   controller.sendMessage();
                 },
-                icon: const Icon(Icons.send),
+                icon: AppIcons.sendIcon,
               ),
             ),
           ),

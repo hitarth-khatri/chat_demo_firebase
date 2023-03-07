@@ -1,5 +1,4 @@
 import 'package:chat_demo_firebase/common/constants/app_strings.dart';
-import 'package:chat_demo_firebase/common/constants/firebase_constants.dart';
 import 'package:chat_demo_firebase/common/enum/loading_status.dart';
 import 'package:chat_demo_firebase/common/widgets/common_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../routes/app_routes.dart';
+import '../../users/controller/users_controller.dart';
 
 class LoginController extends GetxController {
   @override
@@ -15,6 +15,8 @@ class LoginController extends GetxController {
     printDebug(value: firebaseAuth.currentUser?.email);
     super.onInit();
   }
+
+  UsersController controller = Get.find();
 
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -45,7 +47,7 @@ class LoginController extends GetxController {
 
       //add user to firestore
       if (currentUser != null && await isNewUser(currentUser!.uid)) {
-        await FirebaseConstants.usersCollection.add({
+        await controller.firebaseConstants!.usersCollection.add({
           'uid': currentUser?.uid,
           'name': currentUser?.displayName,
           'email': currentUser?.email,
@@ -74,7 +76,7 @@ class LoginController extends GetxController {
 
   ///new user
   Future<bool> isNewUser(String uid) async {
-    final QuerySnapshot result = await FirebaseConstants.usersCollection
+    final QuerySnapshot result = await controller.firebaseConstants!.usersCollection
         .where('uid', isEqualTo: uid)
         .limit(1)
         .get();

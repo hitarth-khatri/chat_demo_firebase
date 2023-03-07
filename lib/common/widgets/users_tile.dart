@@ -13,32 +13,31 @@ Widget usersListTile({
   required String receiverEmail,
   required String receiverName,
   required String receiverProfile,
+  String recentMsg = "Recent Msg",
 }) {
   return ListTile(
     leading: CircleAvatar(
       backgroundImage: NetworkImage(receiverProfile),
       radius: 25,
     ),
+    onTap: () {
+      printDebug(value: "Chat screen");
+      Get.toNamed(
+        Routes.routeChat,
+        arguments: {
+          "senderId": senderId,
+          "senderEmail": senderEmail,
+          "senderName": senderName,
+          "senderProfile": senderProfile,
+          "receiverId": receiverId,
+          "receiverEmail": receiverEmail,
+          "receiverName": receiverName,
+          "receiverProfile": receiverProfile,
+        },
+      );
+    },
     title: Text(receiverEmail),
-    subtitle: Text(receiverName),
-    trailing: IconButton(
-      onPressed: () {
-        printDebug(value: "Chat screen");
-        Get.toNamed(
-          Routes.routeChat,
-          arguments: {
-            "senderId": senderId,
-            "senderEmail": senderEmail,
-            "senderName": senderName,
-            "senderProfile": senderProfile,
-            "receiverId": receiverId,
-            "receiverEmail": receiverEmail,
-            "receiverName": receiverName,
-            "receiverProfile": receiverProfile,
-          },
-        );
-      },
-      icon: AppIcons.messageIcon,
-    ),
+    subtitle: Text(recentMsg),
+    trailing: AppIcons.messageIcon,
   );
 }
