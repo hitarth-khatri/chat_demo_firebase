@@ -1,12 +1,25 @@
 import 'package:chat_demo_firebase/common/constants/app_strings.dart';
+import 'package:chat_demo_firebase/common/widgets/common_widgets.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../../common/constants/firebase_constants.dart';
 import '../../routes/app_routes.dart';
 
 class UsersController extends GetxController {
+  @override
+  void onInit() {
+    DatabaseReference chatRef = FirebaseConstants.chatDatabaseReference;
+    chatRef.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      printDebug(value: "DATA: $data");
+    });
+    super.onInit();
+  }
+
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   late final currentUser = firebaseAuth.currentUser;

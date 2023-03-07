@@ -6,7 +6,7 @@ part of 'message_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-MessageModel _$MessageModelFromJson(Map<dynamic, dynamic> json) => MessageModel(
+MessageModel _$MessageModelFromJson(Map<String, dynamic> json) => MessageModel(
       senderId: json['senderId'] as String,
       senderEmail: json['senderEmail'] as String,
       senderName: json['senderName'] as String,

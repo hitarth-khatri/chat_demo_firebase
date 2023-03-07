@@ -8,12 +8,14 @@ class UserModel {
   String name;
   String email;
   String profileUrl;
+  String lastMessage;
 
   UserModel({
     required this.uid,
     required this.name,
     required this.email,
     required this.profileUrl,
+    this.lastMessage = "",
   });
 
   factory UserModel.fromJson(Map<dynamic, dynamic> json) =>
