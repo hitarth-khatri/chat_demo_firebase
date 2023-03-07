@@ -30,7 +30,7 @@ class ChatScreen extends GetView<ChatController> {
           reverse: true,
           padding: const EdgeInsets.all(5),
           defaultChild: const Center(child: CircularProgressIndicator()),
-          query: controller.dbQuery,
+          query: controller.chatDbQuery,
           itemBuilder: (context, snapshot, animation, index) {
             final json = snapshot.value as Map;
             final messageModel = MessageModel.fromJson(json);

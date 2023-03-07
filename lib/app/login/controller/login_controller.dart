@@ -1,13 +1,14 @@
+import 'package:chat_demo_firebase/app/login/model/user_model.dart';
 import 'package:chat_demo_firebase/common/constants/app_strings.dart';
+import 'package:chat_demo_firebase/common/constants/firebase_constants.dart';
 import 'package:chat_demo_firebase/common/enum/loading_status.dart';
 import 'package:chat_demo_firebase/common/widgets/common_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../routes/app_routes.dart';
-import '../../users/controller/users_controller.dart';
 
 class LoginController extends GetxController {
   @override
@@ -15,8 +16,6 @@ class LoginController extends GetxController {
     printDebug(value: firebaseAuth.currentUser?.email);
     super.onInit();
   }
-
-  UsersController controller = Get.find();
 
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -45,14 +44,18 @@ class LoginController extends GetxController {
       currentUser = firebaseAuth.currentUser;
       printDebug(value: "uid: ${currentUser?.uid}");
 
-      //add user to firestore
+      //add user to realtime db
       if (currentUser != null && await isNewUser(currentUser!.uid)) {
-        await controller.firebaseConstants!.usersCollection.add({
-          'uid': currentUser?.uid,
-          'name': currentUser?.displayName,
-          'email': currentUser?.email,
-          'photo': currentUser?.photoURL,
-        });
+        final user = UserModel(
+          uid: currentUser?.uid ?? "",
+          name: currentUser?.displayName ?? "",
+          email: currentUser?.email ?? "",
+          profileUrl: currentUser?.photoURL ?? "",
+        );
+
+        await FirebaseConstants.usersDatabaseReference
+            .push()
+            .set(user.toJson());
 
         printDebug(value: "${currentUser?.email} added");
       } else {
@@ -76,11 +79,11 @@ class LoginController extends GetxController {
 
   ///new user
   Future<bool> isNewUser(String uid) async {
-    final QuerySnapshot result = await controller.firebaseConstants!.usersCollection
-        .where('uid', isEqualTo: uid)
-        .limit(1)
-        .get();
-    printDebug(value: "result: ${result.size}");
-    return result.size == 0;
+    DatabaseEvent result = await FirebaseConstants.usersDatabaseReference
+        .orderByChild("uid")
+        .equalTo(uid)
+        .once();
+
+    return result.snapshot.children.isEmpty;
   }
 }

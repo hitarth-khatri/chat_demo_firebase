@@ -1,23 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class FirebaseConstants {
-  FirebaseFirestore firestore;
+  static DatabaseReference usersDatabaseReference =
+      FirebaseDatabase.instance.ref().child("users");
+  static DatabaseReference chatDatabaseReference =
+      FirebaseDatabase.instance.ref().child("chats");
 
-  // = FirebaseFirestore.instance;
-  CollectionReference usersCollection;
+  /*static Query chatDbQuery = chatDatabaseReference.child(chatRoomId);
 
-  // = firestore.collection('users');
-
-  DatabaseReference chatDatabaseReference;
-
-  // = FirebaseDatabase.instance.ref().child("Chat List");
-
-  FirebaseConstants({
-    required this.firestore,
-    required this.usersCollection,
-    required this.chatDatabaseReference,
-  });
-
-  getMessageInstant() {}
+  ///get chat room id
+  getChatRoomId({required String senderId, required String receiverId}) {
+    if (senderId.hashCode <= receiverId.hashCode) {
+      chatRoomId = '$senderId-$receiverId';
+    } else {
+      chatRoomId = '$receiverId-$senderId';
+    }
+  }*/
 }

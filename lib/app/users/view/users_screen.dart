@@ -1,4 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:chat_demo_firebase/app/login/model/user_model.dart';
+import 'package:chat_demo_firebase/common/constants/firebase_constants.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -53,7 +55,36 @@ class UsersScreen extends GetView<UsersController> {
             ),
           ),
           //users list
-          body: StreamBuilder<QuerySnapshot>(
+          body: FirebaseAnimatedList(
+            primary: false,
+            shrinkWrap: true,
+            padding: const EdgeInsets.all(5),
+            defaultChild: const Center(child: CircularProgressIndicator()),
+            query: FirebaseConstants.usersDatabaseReference,
+            itemBuilder: (context, snapshot, animation, index) {
+              final json = snapshot.value as Map;
+              final userModel = UserModel.fromJson(json);
+
+              return snapshot.children.length <= 1
+                  ? const Center(
+                      child: Text(AppStrings.noUsers),
+                    )
+                  : userModel.uid == controller.currentUser?.uid
+                      ? Container()
+                      : usersListTile(
+                          senderId: controller.currentUser!.uid,
+                          senderEmail: controller.currentUser!.email!,
+                          senderName: controller.currentUser!.displayName!,
+                          senderProfile: controller.currentUser!.photoURL!,
+                          receiverId: userModel.uid,
+                          receiverEmail: userModel.email,
+                          receiverName: userModel.name,
+                          // recentMsg: controller.lastMessage.value,
+                          receiverProfile: userModel.profileUrl,
+                        );
+            },
+          ),
+          /*body: StreamBuilder<QuerySnapshot>(
             stream: controller.firebaseConstants!.usersCollection.snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -71,7 +102,7 @@ class UsersScreen extends GetView<UsersController> {
                           DocumentSnapshot document =
                               snapshot.data!.docs[index];
                           controller.getChatRoomId(receiverId: document["uid"]);
-                          convertIntoString();
+                          // convertIntoString();
                           return document["uid"] == controller.currentUser?.uid
                               ? Container()
                               : Obx(
@@ -93,13 +124,13 @@ class UsersScreen extends GetView<UsersController> {
                       );
               }
             },
-          ),
+          ),*/
         ),
       ),
     );
   }
 
-  convertIntoString() async {
+/*convertIntoString() async {
     controller.lastMessage.value = await controller.getLastMsg() ?? "";
-  }
+  }*/
 }

@@ -1,6 +1,6 @@
 import 'package:chat_demo_firebase/app/chat/model/message_model.dart';
-import 'package:chat_demo_firebase/app/users/controller/users_controller.dart';
 import 'package:chat_demo_firebase/common/constants/app_strings.dart';
+import 'package:chat_demo_firebase/common/constants/firebase_constants.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -10,10 +10,9 @@ import '../../../common/widgets/common_widgets.dart';
 class ChatController extends GetxController {
   late TextEditingController msgController;
 
-  UsersController controller = Get.find();
-
-  late Query dbQuery;
   String chatRoomId = "";
+
+  late Query chatDbQuery;
 
   var senderId = Get.arguments["senderId"] ?? "";
   String senderEmail = Get.arguments["senderEmail"] ?? "";
@@ -29,8 +28,7 @@ class ChatController extends GetxController {
   void onInit() {
     msgController = TextEditingController();
     getChatRoomId();
-    dbQuery =
-        controller.firebaseConstants!.chatDatabaseReference.child(chatRoomId);
+    chatDbQuery = FirebaseConstants.chatDatabaseReference.child(chatRoomId);
     super.onInit();
   }
 
@@ -57,7 +55,7 @@ class ChatController extends GetxController {
         sentTime: DateTime.now(),
       );
 
-      controller.firebaseConstants!.chatDatabaseReference
+      FirebaseConstants.chatDatabaseReference
           .child(chatRoomId)
           .push()
           .set(message.toJson());

@@ -17,6 +17,8 @@ printDebug({required value}) {
 ///remove focus
 removeFocus() => WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
 
+
+///exit dialog
 exitDialog() {
   Get.dialog(
     barrierDismissible: false,
