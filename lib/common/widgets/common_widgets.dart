@@ -10,7 +10,7 @@ import '../constants/app_strings.dart';
 ///debug print
 printDebug({required value}) {
   if (kDebugMode) {
-    print(value);
+    print("------$value------");
   }
 }
 

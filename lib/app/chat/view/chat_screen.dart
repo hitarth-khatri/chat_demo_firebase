@@ -25,54 +25,49 @@ class ChatScreen extends GetView<ChatController> {
             ],
           ),
         ),
-        body: FirebaseAnimatedList(
-          primary: false,
-          reverse: true,
-          padding: const EdgeInsets.all(5),
-          defaultChild: const Center(child: CircularProgressIndicator()),
-          query: controller.chatDbQuery,
-          itemBuilder: (context, snapshot, animation, index) {
-            final json = snapshot.value as Map;
-            final messageModel = MessageModel.fromJson(json);
-            return controller.senderId == messageModel.senderId
-                ?
-                //sender column right
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      messageModel.messageType == "message"
-                          ? messageTile(
-                              alignment: Alignment.centerRight,
-                              width: width,
-                              message: messageModel.message,
-                            )
-                          : const Text("Image"),
-                      /*controller.galleryImage != null
-                          ? Image.file(
-                              controller.imageFile.value,
-                              fit: BoxFit.cover,
-                              height: 150,
-                              width: 150,
-                            )
-                          : Container(),*/
-                    ],
-                  )
-                :
-                //receiver column left
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      messageModel.messageType == "message"
-                          ? messageTile(
-                              alignment: Alignment.centerLeft,
-                              width: width,
-                              message: messageModel.message,
-                            )
-                          : const Text("Image"),
-                    ],
-                  );
-          },
-        ).paddingOnly(bottom: 80),
+        body: Obx(
+          () => controller.isSendingImg.value
+              ? const Center(child: CircularProgressIndicator())
+              : FirebaseAnimatedList(
+                  primary: false,
+                  // reverse: true,
+                  padding: const EdgeInsets.all(5),
+                  defaultChild:
+                      const Center(child: CircularProgressIndicator()),
+                  query: controller.chatDbQuery.orderByChild("sentTime"),
+                  itemBuilder: (context, snapshot, animation, index) {
+                    final json = snapshot.value as Map;
+                    final messageModel = MessageModel.fromJson(json);
+                    return controller.senderId == messageModel.senderId
+                        ?
+                        //sender column right
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              messageTile(
+                                alignment: Alignment.centerRight,
+                                width: width,
+                                messageType: messageModel.messageType,
+                                message: messageModel.message,
+                              )
+                            ],
+                          )
+                        :
+                        //receiver column left
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              messageTile(
+                                alignment: Alignment.centerLeft,
+                                width: width,
+                                messageType: messageModel.messageType,
+                                message: messageModel.message,
+                              )
+                            ],
+                          );
+                  },
+                ).paddingOnly(bottom: 80),
+        ),
 
         //send message text field
         bottomSheet: Container(

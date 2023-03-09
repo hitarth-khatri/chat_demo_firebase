@@ -4,6 +4,7 @@ import 'package:chat_demo_firebase/app/chat/model/message_model.dart';
 import 'package:chat_demo_firebase/common/constants/app_strings.dart';
 import 'package:chat_demo_firebase/common/constants/firebase_constants.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,8 +16,10 @@ class ChatController extends GetxController {
   late TextEditingController msgController;
 
   String chatRoomId = "";
+  var isSendingImg = false.obs;
 
   late Query chatDbQuery;
+  late dynamic imagesRef;
 
   var senderId = Get.arguments["senderId"] ?? "";
   String senderEmail = Get.arguments["senderEmail"] ?? "";
@@ -31,12 +34,15 @@ class ChatController extends GetxController {
   XFile? galleryImage;
   var imgPath = "".obs;
   Rx<File> imageFile = File("").obs;
+  var uploadedFileURL = "".obs;
 
   @override
   void onInit() {
     msgController = TextEditingController();
     getChatRoomId();
     chatDbQuery = FirebaseConstants.chatDatabaseReference.child(chatRoomId);
+    imagesRef =
+        FirebaseConstants.storageRef.child("$chatRoomId/${DateTime.now()}");
     super.onInit();
   }
 
@@ -44,6 +50,15 @@ class ChatController extends GetxController {
   void onClose() {
     msgController.dispose();
     super.onClose();
+  }
+
+  ///get chat room id
+  getChatRoomId() {
+    if (senderId.hashCode <= receiverId.hashCode) {
+      chatRoomId = '$senderId-$receiverId';
+    } else {
+      chatRoomId = '$receiverId-$senderId';
+    }
   }
 
   ///send message
@@ -80,17 +95,8 @@ class ChatController extends GetxController {
   }
 
   ///send image
-  uploadImage() {
-    requestGallery();
-  }
-
-  ///get chat room id
-  getChatRoomId() {
-    if (senderId.hashCode <= receiverId.hashCode) {
-      chatRoomId = '$senderId-$receiverId';
-    } else {
-      chatRoomId = '$receiverId-$senderId';
-    }
+  uploadImage() async {
+    await requestGallery();
   }
 
   ///get image from gallery
@@ -108,7 +114,7 @@ class ChatController extends GetxController {
         printDebug(value: "Image path: $imgPath");
         imageFile.value = File(imgPath.value);
         msgController.text = "Image selected";
-        return imageFile.value;
+        uploadFile();
       }
     } else if (status.isPermanentlyDenied) {
       printDebug(value: "Permission Denied");
@@ -120,5 +126,49 @@ class ChatController extends GetxController {
         ),
       );
     }
+  }
+
+  Future uploadFile() async {
+    UploadTask uploadTask = imagesRef.putFile(imageFile.value);
+    uploadTask.snapshotEvents.listen((event) async {
+      switch (event.state) {
+        case TaskState.paused:
+          // TODO: Handle this case.
+          break;
+        case TaskState.running:
+          isSendingImg.value = true;
+          break;
+        case TaskState.success:
+          printDebug(value: "File Uploaded");
+          uploadedFileURL.value = await imagesRef.getDownloadURL();
+          final messageImg = MessageModel(
+            senderId: senderId,
+            senderEmail: senderEmail,
+            senderName: senderName,
+            senderProfile: senderProfile,
+            receiverId: receiverId,
+            receiverEmail: receiverEmail,
+            receiverName: receiverName,
+            receiverProfile: receiverProfile,
+            message: uploadedFileURL.value,
+            messageType: "image",
+            sentTime: DateTime.now(),
+          );
+          await FirebaseConstants.chatDatabaseReference
+              .child(chatRoomId)
+              .push()
+              .set(messageImg.toJson());
+          printDebug(value: "sent message");
+          msgController.clear();
+          isSendingImg.value = false;
+          break;
+        case TaskState.canceled:
+          // TODO: Handle this case.
+          break;
+        case TaskState.error:
+          // TODO: Handle this case.
+          break;
+      }
+    });
   }
 }
