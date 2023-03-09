@@ -82,6 +82,7 @@ class ChatController extends GetxController {
           .child(chatRoomId)
           .push()
           .set(message.toJson());
+
       printDebug(value: "sent message");
       msgController.clear();
     } else {
@@ -94,20 +95,23 @@ class ChatController extends GetxController {
     }
   }
 
-  ///get image from gallery
+  ///send image from gallery
   requestGallery() async {
     removeFocus();
     var status = await Permission.storage.request();
     if (status.isGranted) {
       printDebug(value: "Permission Granted");
+
       galleryImage = await ImagePicker().pickImage(
         source: ImageSource.gallery,
         maxWidth: 1800,
         maxHeight: 1800,
       );
+
       if (galleryImage != null) {
         imgPath.value = galleryImage!.path;
         printDebug(value: "Image path: $imgPath");
+
         imageFile.value = File(imgPath.value);
         uploadFile();
       }
@@ -157,6 +161,7 @@ class ChatController extends GetxController {
   //send image to DB
   sendImage() async {
     uploadedFileURL.value = await imagesRef.getDownloadURL();
+
     final messageImg = MessageModel(
       senderId: senderId,
       senderEmail: senderEmail,
@@ -170,10 +175,12 @@ class ChatController extends GetxController {
       messageType: "image",
       sentTime: DateTime.now(),
     );
+
     await FirebaseConstants.chatDatabaseReference
         .child(chatRoomId)
         .push()
         .set(messageImg.toJson());
+
     printDebug(value: "sent message");
   }
 }

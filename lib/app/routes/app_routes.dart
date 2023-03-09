@@ -1,6 +1,5 @@
 class Routes {
   static const routeLogin = "/login";
-  static const routeUser = "/user";
+  static const routeUsers = "/users";
   static const routeChat = "/chat";
-
 }

@@ -11,12 +11,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../../routes/app_routes.dart';
 
 class LoginController extends GetxController {
-  @override
-  void onInit() {
-    printDebug(value: firebaseAuth.currentUser?.email);
-    super.onInit();
-  }
-
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   late final User? currentUser;
@@ -63,7 +57,7 @@ class LoginController extends GetxController {
       }
 
       //navigate to user screen
-      Get.offNamed(Routes.routeUser);
+      Get.offNamed(Routes.routeUsers);
       loginStatus.value = LoadStatus.success;
       Get.rawSnackbar(
         title: AppStrings.success,

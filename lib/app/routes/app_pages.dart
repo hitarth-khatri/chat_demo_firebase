@@ -18,10 +18,11 @@ class AppPages {
 
     ///user screen
     GetPage(
-      name: Routes.routeUser,
+      name: Routes.routeUsers,
       page: () => const UsersScreen(),
       binding: UsersBinding(),
     ),
+
     ///chat screen
     GetPage(
       name: Routes.routeChat,

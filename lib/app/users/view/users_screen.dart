@@ -1,13 +1,12 @@
 import 'package:chat_demo_firebase/app/login/model/user_model.dart';
+import 'package:chat_demo_firebase/app/users/view/users_common_view.dart';
 import 'package:chat_demo_firebase/common/constants/firebase_constants.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../common/constants/app_icons.dart';
 import '../../../common/constants/app_strings.dart';
 import '../../../common/widgets/common_widgets.dart';
-import '../../../common/widgets/users_tile.dart';
 import '../controller/users_controller.dart';
 
 class UsersScreen extends GetView<UsersController> {
@@ -26,34 +25,7 @@ class UsersScreen extends GetView<UsersController> {
             centerTitle: true,
             title: const Text(AppStrings.userPage),
           ),
-          drawer: Drawer(
-            child: ListView(
-              primary: false,
-              children: [
-                DrawerHeader(
-                  //user details
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(controller.currentUser!.photoURL!),
-                        radius: 25,
-                      ).paddingSymmetric(horizontal: 15),
-                      Text(
-                        controller.currentUser?.displayName ?? "",
-                      ),
-                    ],
-                  ),
-                ),
-                //log out
-                ListTile(
-                  title: const Text(AppStrings.logOutStr),
-                  leading: AppIcons.logoutIcon,
-                  onTap: () => controller.logoutGoogle(),
-                ),
-              ],
-            ),
-          ),
+          drawer: usersDrawer(),
           //users list
           body: FirebaseAnimatedList(
             primary: false,
@@ -62,9 +34,11 @@ class UsersScreen extends GetView<UsersController> {
             defaultChild: const Center(child: CircularProgressIndicator()),
             query: FirebaseConstants.usersDatabaseReference,
             itemBuilder: (context, snapshotUsers, animation, index) {
-              final json = snapshotUsers.value as Map;
-              final userModel = UserModel.fromJson(json);
+              final jsonUsers = snapshotUsers.value as Map;
+              final userModel = UserModel.fromJson(jsonUsers);
+
               controller.getChatRoomId(receiverId: userModel.uid);
+
               return StreamBuilder(
                 stream: FirebaseConstants.chatDatabaseReference
                     .child(controller.chatRoomId.value)
@@ -76,12 +50,16 @@ class UsersScreen extends GetView<UsersController> {
                     return Container();
                   } else {
                     if (snapshotChats.data!.snapshot.exists) {
-                      final jsonMsg = snapshotChats.data!.snapshot.value as Map;
-                      var message = jsonMsg.values.map((e) => e["message"]);
+                      final jsonChats =
+                          snapshotChats.data!.snapshot.value as Map;
+
+                      var message = jsonChats.values.map((e) => e["message"]);
                       userModel.lastMessage = message.first;
+
                       var messageType =
-                          jsonMsg.values.map((e) => e["messageType"]);
+                          jsonChats.values.map((e) => e["messageType"]);
                       userModel.lastMessageType = messageType.first;
+
                       printDebug(value: "message: ${message.first}");
                       printDebug(value: "messageType: ${messageType.first}");
                     }
@@ -92,7 +70,7 @@ class UsersScreen extends GetView<UsersController> {
                           )
                         : userModel.uid == controller.currentUser?.uid
                             ? Container()
-                            : usersListTile(
+                            : userListTile(
                                 senderId: controller.currentUser!.uid,
                                 senderEmail: controller.currentUser!.email!,
                                 senderName:

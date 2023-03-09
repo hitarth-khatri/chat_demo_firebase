@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 2), () async {
       await googleSignIn.isSignedIn()
           ? Get.offNamed(
-              Routes.routeUser,
+              Routes.routeUsers,
             )
           : Get.offNamed(
               Routes.routeLogin,

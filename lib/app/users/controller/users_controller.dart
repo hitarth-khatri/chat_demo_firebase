@@ -8,11 +8,9 @@ import '../../routes/app_routes.dart';
 
 class UsersController extends GetxController {
   final GoogleSignIn googleSignIn = GoogleSignIn();
-  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  late final currentUser = firebaseAuth.currentUser;
+  late final currentUser = FirebaseAuth.instance.currentUser;
 
   final chatRoomId = "".obs;
-  final lastMessage = "".obs;
 
   ///log out dialog
   logoutGoogle() {
