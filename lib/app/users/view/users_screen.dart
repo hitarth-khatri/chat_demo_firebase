@@ -58,6 +58,7 @@ class UsersScreen extends GetView<UsersController> {
           body: FirebaseAnimatedList(
             primary: false,
             shrinkWrap: true,
+            reverse: true,
             padding: const EdgeInsets.all(5),
             defaultChild: const Center(child: CircularProgressIndicator()),
             query: FirebaseConstants.usersDatabaseReference,
@@ -67,13 +68,17 @@ class UsersScreen extends GetView<UsersController> {
               return StreamBuilder(
                 stream: FirebaseConstants.chatDatabaseReference
                     .child(controller.chatRoomId.value)
+                    .limitToLast(1)
                     .onValue,
                 builder: (context, snapshotChats) {
                   if (snapshotChats.connectionState ==
                       ConnectionState.waiting) {
                     return Container();
                   } else {
-                    // printDebug(value: "chat snap: ${snapshotChats.data!.snapshot.value}");
+                    // printDebug(value: "chat snap: ${snapshotChats.data!.snapshot.value as Map}");
+
+                    /*userModel.lastMessage = snapshotChats.data!.type.name;
+                    printDebug(value: "last: ${userModel.lastMessage}");*/
                     return snapshotUsers.children.length <= 1
                         ? const Center(
                             child: Text(AppStrings.noUsers),

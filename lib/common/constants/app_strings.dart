@@ -17,4 +17,6 @@ class AppStrings {
   static const yesStr = "Yes";
   static const noStr = "No";
   static const exitMsg = "Sure want to exit?";
+
+  static const close = "Close";
 }

@@ -94,13 +94,9 @@ class ChatController extends GetxController {
     }
   }
 
-  ///send image
-  uploadImage() async {
-    await requestGallery();
-  }
-
   ///get image from gallery
   requestGallery() async {
+    removeFocus();
     var status = await Permission.storage.request();
     if (status.isGranted) {
       printDebug(value: "Permission Granted");
@@ -113,7 +109,6 @@ class ChatController extends GetxController {
         imgPath.value = galleryImage!.path;
         printDebug(value: "Image path: $imgPath");
         imageFile.value = File(imgPath.value);
-        msgController.text = "Image selected";
         uploadFile();
       }
     } else if (status.isPermanentlyDenied) {
@@ -128,47 +123,57 @@ class ChatController extends GetxController {
     }
   }
 
+  //upload file to storage
   Future uploadFile() async {
     UploadTask uploadTask = imagesRef.putFile(imageFile.value);
+
     uploadTask.snapshotEvents.listen((event) async {
       switch (event.state) {
         case TaskState.paused:
-          // TODO: Handle this case.
+          printDebug(value: "upload paused");
           break;
+
         case TaskState.running:
           isSendingImg.value = true;
           break;
+
         case TaskState.success:
-          printDebug(value: "File Uploaded");
-          uploadedFileURL.value = await imagesRef.getDownloadURL();
-          final messageImg = MessageModel(
-            senderId: senderId,
-            senderEmail: senderEmail,
-            senderName: senderName,
-            senderProfile: senderProfile,
-            receiverId: receiverId,
-            receiverEmail: receiverEmail,
-            receiverName: receiverName,
-            receiverProfile: receiverProfile,
-            message: uploadedFileURL.value,
-            messageType: "image",
-            sentTime: DateTime.now(),
-          );
-          await FirebaseConstants.chatDatabaseReference
-              .child(chatRoomId)
-              .push()
-              .set(messageImg.toJson());
-          printDebug(value: "sent message");
-          msgController.clear();
+          printDebug(value: "upload success");
+          await sendImage();
           isSendingImg.value = false;
           break;
+
         case TaskState.canceled:
-          // TODO: Handle this case.
+          printDebug(value: "upload cancelled");
           break;
+
         case TaskState.error:
-          // TODO: Handle this case.
+          printDebug(value: "upload error");
           break;
       }
     });
+  }
+
+  //send image to DB
+  sendImage() async {
+    uploadedFileURL.value = await imagesRef.getDownloadURL();
+    final messageImg = MessageModel(
+      senderId: senderId,
+      senderEmail: senderEmail,
+      senderName: senderName,
+      senderProfile: senderProfile,
+      receiverId: receiverId,
+      receiverEmail: receiverEmail,
+      receiverName: receiverName,
+      receiverProfile: receiverProfile,
+      message: uploadedFileURL.value,
+      messageType: "image",
+      sentTime: DateTime.now(),
+    );
+    await FirebaseConstants.chatDatabaseReference
+        .child(chatRoomId)
+        .push()
+        .set(messageImg.toJson());
+    printDebug(value: "sent message");
   }
 }

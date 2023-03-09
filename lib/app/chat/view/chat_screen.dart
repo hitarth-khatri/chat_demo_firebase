@@ -28,44 +28,51 @@ class ChatScreen extends GetView<ChatController> {
         body: Obx(
           () => controller.isSendingImg.value
               ? const Center(child: CircularProgressIndicator())
-              : FirebaseAnimatedList(
+              : ListView(
+                  shrinkWrap: true,
                   primary: false,
-                  // reverse: true,
-                  padding: const EdgeInsets.all(5),
-                  defaultChild:
-                      const Center(child: CircularProgressIndicator()),
-                  query: controller.chatDbQuery.orderByChild("sentTime"),
-                  itemBuilder: (context, snapshot, animation, index) {
-                    final json = snapshot.value as Map;
-                    final messageModel = MessageModel.fromJson(json);
-                    return controller.senderId == messageModel.senderId
-                        ?
-                        //sender column right
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              messageTile(
-                                alignment: Alignment.centerRight,
-                                width: width,
-                                messageType: messageModel.messageType,
-                                message: messageModel.message,
+                  reverse: true,
+                  children: [
+                    FirebaseAnimatedList(
+                      shrinkWrap: true,
+                      primary: false,
+                      padding: const EdgeInsets.all(5),
+                      defaultChild:
+                          const Center(child: CircularProgressIndicator()),
+                      query: controller.chatDbQuery,
+                      itemBuilder: (context, snapshot, animation, index) {
+                        final json = snapshot.value as Map;
+                        final messageModel = MessageModel.fromJson(json);
+                        return controller.senderId == messageModel.senderId
+                            ?
+                            //sender column right
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  messageTile(
+                                    alignment: Alignment.centerRight,
+                                    width: width,
+                                    messageType: messageModel.messageType,
+                                    message: messageModel.message,
+                                  )
+                                ],
                               )
-                            ],
-                          )
-                        :
-                        //receiver column left
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              messageTile(
-                                alignment: Alignment.centerLeft,
-                                width: width,
-                                messageType: messageModel.messageType,
-                                message: messageModel.message,
-                              )
-                            ],
-                          );
-                  },
+                            :
+                            //receiver column left
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  messageTile(
+                                    alignment: Alignment.centerLeft,
+                                    width: width,
+                                    messageType: messageModel.messageType,
+                                    message: messageModel.message,
+                                  )
+                                ],
+                              );
+                      },
+                    ),
+                  ],
                 ).paddingOnly(bottom: 80),
         ),
 
@@ -73,28 +80,31 @@ class ChatScreen extends GetView<ChatController> {
         bottomSheet: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           color: AppColors.white,
-          child: TextFormField(
-            controller: controller.msgController,
-            decoration: InputDecoration(
-              border: const OutlineInputBorder(),
-              hintText: "Enter message",
-              suffixIcon: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      controller.uploadImage();
-                    },
-                    icon: const Icon(Icons.camera_alt_outlined),
+          child: Obx(
+            ()=> IgnorePointer(
+              ignoring: controller.isSendingImg.value ? true : false,
+              child: TextFormField(
+                controller: controller.msgController,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  hintText: "Enter message",
+                  suffixIcon: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      //send image
+                      IconButton(
+                        onPressed: () => controller.requestGallery(),
+                        icon: AppIcons.uploadImage,
+                      ),
+                      //send text
+                      IconButton(
+                        onPressed: () => controller.sendMessage(),
+                        icon: AppIcons.sendIcon,
+                      ),
+                    ],
                   ),
-                  IconButton(
-                    onPressed: () {
-                      controller.sendMessage();
-                    },
-                    icon: AppIcons.sendIcon,
-                  ),
-                ],
+                ),
               ),
             ),
           ),
