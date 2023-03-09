@@ -15,6 +15,7 @@ class MessageModel {
   String receiverProfile;
 
   String message;
+  String messageType;
   DateTime sentTime;
 
   MessageModel({
@@ -27,6 +28,7 @@ class MessageModel {
     required this.receiverName,
     required this.receiverProfile,
     required this.message,
+    this.messageType = "message",
     required this.sentTime,
   });
 

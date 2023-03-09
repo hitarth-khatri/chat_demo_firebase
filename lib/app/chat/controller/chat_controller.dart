@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:chat_demo_firebase/app/chat/model/message_model.dart';
 import 'package:chat_demo_firebase/common/constants/app_strings.dart';
 import 'package:chat_demo_firebase/common/constants/firebase_constants.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/widgets/common_widgets.dart';
 
@@ -23,6 +27,10 @@ class ChatController extends GetxController {
   String receiverEmail = Get.arguments["receiverEmail"] ?? "";
   String receiverName = Get.arguments["receiverName"] ?? "";
   String receiverProfile = Get.arguments["receiverProfile"] ?? "";
+
+  XFile? galleryImage;
+  var imgPath = "".obs;
+  Rx<File> imageFile = File("").obs;
 
   @override
   void onInit() {
@@ -71,12 +79,46 @@ class ChatController extends GetxController {
     }
   }
 
+  ///send image
+  uploadImage() {
+    requestGallery();
+  }
+
   ///get chat room id
   getChatRoomId() {
     if (senderId.hashCode <= receiverId.hashCode) {
       chatRoomId = '$senderId-$receiverId';
     } else {
       chatRoomId = '$receiverId-$senderId';
+    }
+  }
+
+  ///get image from gallery
+  requestGallery() async {
+    var status = await Permission.storage.request();
+    if (status.isGranted) {
+      printDebug(value: "Permission Granted");
+      galleryImage = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1800,
+        maxHeight: 1800,
+      );
+      if (galleryImage != null) {
+        imgPath.value = galleryImage!.path;
+        printDebug(value: "Image path: $imgPath");
+        imageFile.value = File(imgPath.value);
+        msgController.text = "Image selected";
+        return imageFile.value;
+      }
+    } else if (status.isPermanentlyDenied) {
+      printDebug(value: "Permission Denied");
+      Get.defaultDialog(
+        middleText: "Permission denied",
+        confirm: TextButton(
+          onPressed: () => openAppSettings(),
+          child: const Text("open setting"),
+        ),
+      );
     }
   }
 }

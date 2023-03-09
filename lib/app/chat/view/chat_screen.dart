@@ -40,11 +40,21 @@ class ChatScreen extends GetView<ChatController> {
                 Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      chatTile(
-                        alignment: Alignment.centerRight,
-                        width: width,
-                        message: messageModel.message,
-                      ),
+                      messageModel.messageType == "message"
+                          ? messageTile(
+                              alignment: Alignment.centerRight,
+                              width: width,
+                              message: messageModel.message,
+                            )
+                          : const Text("Image"),
+                      /*controller.galleryImage != null
+                          ? Image.file(
+                              controller.imageFile.value,
+                              fit: BoxFit.cover,
+                              height: 150,
+                              width: 150,
+                            )
+                          : Container(),*/
                     ],
                   )
                 :
@@ -52,11 +62,13 @@ class ChatScreen extends GetView<ChatController> {
                 Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      chatTile(
-                        alignment: Alignment.centerLeft,
-                        width: width,
-                        message: messageModel.message,
-                      ),
+                      messageModel.messageType == "message"
+                          ? messageTile(
+                              alignment: Alignment.centerLeft,
+                              width: width,
+                              message: messageModel.message,
+                            )
+                          : const Text("Image"),
                     ],
                   );
           },
@@ -71,11 +83,23 @@ class ChatScreen extends GetView<ChatController> {
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
               hintText: "Enter message",
-              suffixIcon: IconButton(
-                onPressed: () {
-                  controller.sendMessage();
-                },
-                icon: AppIcons.sendIcon,
+              suffixIcon: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      controller.uploadImage();
+                    },
+                    icon: const Icon(Icons.camera_alt_outlined),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      controller.sendMessage();
+                    },
+                    icon: AppIcons.sendIcon,
+                  ),
+                ],
               ),
             ),
           ),

@@ -61,11 +61,43 @@ class UsersScreen extends GetView<UsersController> {
             padding: const EdgeInsets.all(5),
             defaultChild: const Center(child: CircularProgressIndicator()),
             query: FirebaseConstants.usersDatabaseReference,
-            itemBuilder: (context, snapshot, animation, index) {
-              final json = snapshot.value as Map;
+            itemBuilder: (context, snapshotUsers, animation, index) {
+              final json = snapshotUsers.value as Map;
               final userModel = UserModel.fromJson(json);
+              return StreamBuilder(
+                stream: FirebaseConstants.chatDatabaseReference
+                    .child(controller.chatRoomId.value)
+                    .onValue,
+                builder: (context, snapshotChats) {
+                  if (snapshotChats.connectionState ==
+                      ConnectionState.waiting) {
+                    return Container();
+                  } else {
+                    // printDebug(value: "chat snap: ${snapshotChats.data!.snapshot.value}");
+                    return snapshotUsers.children.length <= 1
+                        ? const Center(
+                            child: Text(AppStrings.noUsers),
+                          )
+                        : userModel.uid == controller.currentUser?.uid
+                            ? Container()
+                            : usersListTile(
+                                senderId: controller.currentUser!.uid,
+                                senderEmail: controller.currentUser!.email!,
+                                senderName:
+                                    controller.currentUser!.displayName!,
+                                senderProfile:
+                                    controller.currentUser!.photoURL!,
+                                receiverId: userModel.uid,
+                                receiverEmail: userModel.email,
+                                receiverName: userModel.name,
+                                // recentMsg: controller.lastMessage.value,
+                                receiverProfile: userModel.profileUrl,
+                              );
+                  }
+                },
+              );
 
-              return snapshot.children.length <= 1
+              /*return snapshot.children.length <= 1
                   ? const Center(
                       child: Text(AppStrings.noUsers),
                     )
@@ -81,7 +113,7 @@ class UsersScreen extends GetView<UsersController> {
                           receiverName: userModel.name,
                           // recentMsg: controller.lastMessage.value,
                           receiverProfile: userModel.profileUrl,
-                        );
+                        );*/
             },
           ),
           /*body: StreamBuilder<QuerySnapshot>(

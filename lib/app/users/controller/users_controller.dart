@@ -12,11 +12,11 @@ import '../../routes/app_routes.dart';
 class UsersController extends GetxController {
   @override
   void onInit() {
-    DatabaseReference chatRef = FirebaseConstants.chatDatabaseReference;
+    /*DatabaseReference chatRef = FirebaseConstants.chatDatabaseReference;
     chatRef.onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value;
       printDebug(value: "DATA: $data");
-    });
+    });*/
     super.onInit();
   }
 
