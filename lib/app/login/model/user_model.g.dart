@@ -12,6 +12,7 @@ UserModel _$UserModelFromJson(Map<dynamic, dynamic> json) => UserModel(
       email: json['email'] as String,
       profileUrl: json['profileUrl'] as String,
       lastMessage: json['lastMessage'] as String? ?? "",
+      lastMessageType: json['lastMessageType'] as String? ?? "message",
     );
 
 Map<dynamic, dynamic> _$UserModelToJson(UserModel instance) => <dynamic, dynamic>{
@@ -20,4 +21,5 @@ Map<dynamic, dynamic> _$UserModelToJson(UserModel instance) => <dynamic, dynamic
       'email': instance.email,
       'profileUrl': instance.profileUrl,
       'lastMessage': instance.lastMessage,
+      'lastMessageType': instance.lastMessageType,
     };

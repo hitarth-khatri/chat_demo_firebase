@@ -1,3 +1,4 @@
+import 'package:chat_demo_firebase/common/constants/app_strings.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
@@ -9,6 +10,7 @@ class UserModel {
   String email;
   String profileUrl;
   String lastMessage;
+  String lastMessageType;
 
   UserModel({
     required this.uid,
@@ -16,6 +18,7 @@ class UserModel {
     required this.email,
     required this.profileUrl,
     this.lastMessage = "",
+    this.lastMessageType = AppStrings.messageTypeMessage,
   });
 
   factory UserModel.fromJson(Map<dynamic, dynamic> json) =>

@@ -54,7 +54,7 @@ class ChatScreen extends GetView<ChatController> {
                                     width: width,
                                     messageType: messageModel.messageType,
                                     message: messageModel.message,
-                                  )
+                                  ),
                                 ],
                               )
                             :
@@ -67,7 +67,7 @@ class ChatScreen extends GetView<ChatController> {
                                     width: width,
                                     messageType: messageModel.messageType,
                                     message: messageModel.message,
-                                  )
+                                  ),
                                 ],
                               );
                       },
@@ -76,12 +76,12 @@ class ChatScreen extends GetView<ChatController> {
                 ).paddingOnly(bottom: 80),
         ),
 
-        //send message text field
+        //send text field
         bottomSheet: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           color: AppColors.white,
           child: Obx(
-            ()=> IgnorePointer(
+            () => IgnorePointer(
               ignoring: controller.isSendingImg.value ? true : false,
               child: TextFormField(
                 controller: controller.msgController,

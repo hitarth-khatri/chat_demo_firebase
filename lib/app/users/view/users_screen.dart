@@ -58,13 +58,13 @@ class UsersScreen extends GetView<UsersController> {
           body: FirebaseAnimatedList(
             primary: false,
             shrinkWrap: true,
-            reverse: true,
             padding: const EdgeInsets.all(5),
             defaultChild: const Center(child: CircularProgressIndicator()),
             query: FirebaseConstants.usersDatabaseReference,
             itemBuilder: (context, snapshotUsers, animation, index) {
               final json = snapshotUsers.value as Map;
               final userModel = UserModel.fromJson(json);
+              controller.getChatRoomId(receiverId: userModel.uid);
               return StreamBuilder(
                 stream: FirebaseConstants.chatDatabaseReference
                     .child(controller.chatRoomId.value)
@@ -75,10 +75,17 @@ class UsersScreen extends GetView<UsersController> {
                       ConnectionState.waiting) {
                     return Container();
                   } else {
-                    // printDebug(value: "chat snap: ${snapshotChats.data!.snapshot.value as Map}");
+                    if (snapshotChats.data!.snapshot.exists) {
+                      final jsonMsg = snapshotChats.data!.snapshot.value as Map;
+                      var message = jsonMsg.values.map((e) => e["message"]);
+                      userModel.lastMessage = message.first;
+                      var messageType =
+                          jsonMsg.values.map((e) => e["messageType"]);
+                      userModel.lastMessageType = messageType.first;
+                      printDebug(value: "message: ${message.first}");
+                      printDebug(value: "messageType: ${messageType.first}");
+                    }
 
-                    /*userModel.lastMessage = snapshotChats.data!.type.name;
-                    printDebug(value: "last: ${userModel.lastMessage}");*/
                     return snapshotUsers.children.length <= 1
                         ? const Center(
                             child: Text(AppStrings.noUsers),
@@ -95,79 +102,19 @@ class UsersScreen extends GetView<UsersController> {
                                 receiverId: userModel.uid,
                                 receiverEmail: userModel.email,
                                 receiverName: userModel.name,
-                                // recentMsg: controller.lastMessage.value,
+                                recentMsg: userModel.lastMessageType ==
+                                        AppStrings.messageTypeMessage
+                                    ? userModel.lastMessage
+                                    : AppStrings.messageTypeImage,
                                 receiverProfile: userModel.profileUrl,
                               );
                   }
                 },
               );
-
-              /*return snapshot.children.length <= 1
-                  ? const Center(
-                      child: Text(AppStrings.noUsers),
-                    )
-                  : userModel.uid == controller.currentUser?.uid
-                      ? Container()
-                      : usersListTile(
-                          senderId: controller.currentUser!.uid,
-                          senderEmail: controller.currentUser!.email!,
-                          senderName: controller.currentUser!.displayName!,
-                          senderProfile: controller.currentUser!.photoURL!,
-                          receiverId: userModel.uid,
-                          receiverEmail: userModel.email,
-                          receiverName: userModel.name,
-                          // recentMsg: controller.lastMessage.value,
-                          receiverProfile: userModel.profileUrl,
-                        );*/
             },
           ),
-          /*body: StreamBuilder<QuerySnapshot>(
-            stream: controller.firebaseConstants!.usersCollection.snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else {
-                return snapshot.data!.docs.length <= 1
-                    ? const Center(
-                        child: Text(AppStrings.noUsers),
-                      )
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        primary: false,
-                        itemCount: snapshot.data!.docs.length,
-                        itemBuilder: (context, index) {
-                          DocumentSnapshot document =
-                              snapshot.data!.docs[index];
-                          controller.getChatRoomId(receiverId: document["uid"]);
-                          // convertIntoString();
-                          return document["uid"] == controller.currentUser?.uid
-                              ? Container()
-                              : Obx(
-                                  () => usersListTile(
-                                    senderId: controller.currentUser!.uid,
-                                    senderEmail: controller.currentUser!.email!,
-                                    senderName:
-                                        controller.currentUser!.displayName!,
-                                    senderProfile:
-                                        controller.currentUser!.photoURL!,
-                                    receiverId: document["uid"],
-                                    receiverEmail: document["email"],
-                                    receiverName: document["name"],
-                                    recentMsg: controller.lastMessage.value,
-                                    receiverProfile: document["photo"],
-                                  ),
-                                );
-                        },
-                      );
-              }
-            },
-          ),*/
         ),
       ),
     );
   }
-
-/*convertIntoString() async {
-    controller.lastMessage.value = await controller.getLastMsg() ?? "";
-  }*/
 }

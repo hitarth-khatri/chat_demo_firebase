@@ -1,3 +1,4 @@
+import 'package:chat_demo_firebase/common/constants/app_strings.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'message_model.g.dart';
@@ -28,7 +29,7 @@ class MessageModel {
     required this.receiverName,
     required this.receiverProfile,
     required this.message,
-    this.messageType = "message",
+    this.messageType = AppStrings.messageTypeMessage,
     required this.sentTime,
   });
 

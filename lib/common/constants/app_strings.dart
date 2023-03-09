@@ -19,4 +19,7 @@ class AppStrings {
   static const exitMsg = "Sure want to exit?";
 
   static const close = "Close";
+
+  static const messageTypeImage = "image";
+  static const messageTypeMessage= "message";
 }

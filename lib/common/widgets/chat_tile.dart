@@ -10,7 +10,7 @@ messageTile({
   required String message,
   required String messageType,
 }) {
-  return messageType == "message"
+  return messageType == AppStrings.messageTypeMessage
       ? Container(
           alignment: alignment,
           width: width / 1.6,
@@ -18,7 +18,9 @@ messageTile({
             borderRadius: BorderRadius.circular(10),
             color: AppColors.orange50,
           ),
-          child: ListTile(title: Text(message)),
+          child: ListTile(
+            title: Text(message),
+          ),
         ).paddingAll(5)
       : InkWell(
           onTap: () => Get.dialog(
