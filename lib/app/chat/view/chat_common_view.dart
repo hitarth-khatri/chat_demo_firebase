@@ -34,31 +34,26 @@ Widget sendTextField() {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
     color: AppColors.white,
-    child: Obx(
-      () => IgnorePointer(
-        ignoring: controller.isSendingImg.value ? true : false,
-        child: TextFormField(
-          controller: controller.msgController,
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            hintText: "Enter message",
-            suffixIcon: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                //send image
-                IconButton(
-                  onPressed: () => controller.requestGallery(),
-                  icon: AppIcons.uploadImage,
-                ),
-                //send text
-                IconButton(
-                  onPressed: () => controller.sendMessage(),
-                  icon: AppIcons.sendIcon,
-                ),
-              ],
+    child: TextFormField(
+      controller: controller.msgController,
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(),
+        hintText: "Enter message",
+        suffixIcon: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            //send image
+            IconButton(
+              onPressed: () => controller.requestGallery(),
+              icon: AppIcons.uploadImage,
             ),
-          ),
+            //send text
+            IconButton(
+              onPressed: () => controller.sendMessage(),
+              icon: AppIcons.sendIcon,
+            ),
+          ],
         ),
       ),
     ),

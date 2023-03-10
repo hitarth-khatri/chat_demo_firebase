@@ -1,10 +1,10 @@
 import 'package:chat_demo_firebase/app/login/model/user_model.dart';
 import 'package:chat_demo_firebase/common/constants/app_strings.dart';
 import 'package:chat_demo_firebase/common/constants/firebase_constants.dart';
-import 'package:chat_demo_firebase/common/enum/loading_status.dart';
 import 'package:chat_demo_firebase/common/widgets/common_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -15,12 +15,10 @@ class LoginController extends GetxController {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   late final User? currentUser;
 
-  final loginStatus = LoadStatus.initial.obs;
-
   ///login with google
   loginWithGoogle() async {
     try {
-      loginStatus.value = LoadStatus.loading;
+      EasyLoading.show();
 
       final GoogleSignInAccount? googleSignInAccount =
           await googleSignIn.signIn();
@@ -58,7 +56,8 @@ class LoginController extends GetxController {
 
       //navigate to user screen
       Get.offNamed(Routes.routeUsers);
-      loginStatus.value = LoadStatus.success;
+
+      EasyLoading.dismiss();
       Get.rawSnackbar(
         title: AppStrings.success,
         message: AppStrings.loggedInSuccess,
@@ -66,7 +65,7 @@ class LoginController extends GetxController {
 
       return;
     } catch (e) {
-      loginStatus.value = LoadStatus.failure;
+      EasyLoading.dismiss();
       printDebug(value: e);
     }
   }

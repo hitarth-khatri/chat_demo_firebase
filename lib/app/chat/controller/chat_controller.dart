@@ -6,6 +6,7 @@ import 'package:chat_demo_firebase/common/constants/firebase_constants.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -16,7 +17,6 @@ class ChatController extends GetxController {
   late TextEditingController msgController;
 
   String chatRoomId = "";
-  var isSendingImg = false.obs;
 
   late Query chatDbQuery;
   late dynamic imagesRef;
@@ -138,13 +138,13 @@ class ChatController extends GetxController {
           break;
 
         case TaskState.running:
-          isSendingImg.value = true;
+          EasyLoading.show();
           break;
 
         case TaskState.success:
           printDebug(value: "upload success");
           await sendImage();
-          isSendingImg.value = false;
+          EasyLoading.dismiss();
           break;
 
         case TaskState.canceled:

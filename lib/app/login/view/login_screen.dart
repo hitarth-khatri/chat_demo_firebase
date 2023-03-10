@@ -3,8 +3,6 @@ import 'package:chat_demo_firebase/common/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../common/enum/loading_status.dart';
-
 class LoginScreen extends GetView<LoginController> {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -16,13 +14,9 @@ class LoginScreen extends GetView<LoginController> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Obx(
-                () => controller.loginStatus.value == LoadStatus.loading
-                    ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: () => controller.loginWithGoogle(),
-                        child: const Text(AppStrings.logInStr),
-                      ),
+              ElevatedButton(
+                onPressed: () => controller.loginWithGoogle(),
+                child: const Text(AppStrings.logInStr),
               ),
             ],
           ),

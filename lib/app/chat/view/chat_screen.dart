@@ -23,43 +23,38 @@ class ChatScreen extends GetView<ChatController> {
             ],
           ),
         ),
-        body: Obx(
-          () => controller.isSendingImg.value
-              ? const Center(child: CircularProgressIndicator())
-              : ListView(
-                  shrinkWrap: true,
-                  primary: false,
-                  reverse: true,
-                  children: [
-                    FirebaseAnimatedList(
-                      shrinkWrap: true,
-                      primary: false,
-                      padding: const EdgeInsets.all(5),
-                      defaultChild:
-                          const Center(child: CircularProgressIndicator()),
-                      query: controller.chatDbQuery,
-                      itemBuilder: (context, snapshot, animation, index) {
-                        final json = snapshot.value as Map;
-                        final messageModel = MessageModel.fromJson(json);
-                        return controller.senderId == messageModel.senderId
-                            ?
-                            //sender column right
-                            messageColumn(
-                                width: width,
-                                messageModel: messageModel,
-                              )
-                            :
-                            //receiver column left
-                            messageColumn(
-                                messageAlignment: CrossAxisAlignment.start,
-                                width: width,
-                                messageModel: messageModel,
-                              );
-                      },
-                    ),
-                  ],
-                ).paddingOnly(bottom: 80),
-        ),
+        body: ListView(
+          shrinkWrap: true,
+          primary: false,
+          reverse: true,
+          children: [
+            FirebaseAnimatedList(
+              shrinkWrap: true,
+              primary: false,
+              padding: const EdgeInsets.all(5),
+              defaultChild: const Center(child: CircularProgressIndicator()),
+              query: controller.chatDbQuery,
+              itemBuilder: (context, snapshot, animation, index) {
+                final json = snapshot.value as Map;
+                final messageModel = MessageModel.fromJson(json);
+                return controller.senderId == messageModel.senderId
+                    ?
+                    //sender column right
+                    messageColumn(
+                        width: width,
+                        messageModel: messageModel,
+                      )
+                    :
+                    //receiver column left
+                    messageColumn(
+                        messageAlignment: CrossAxisAlignment.start,
+                        width: width,
+                        messageModel: messageModel,
+                      );
+              },
+            ),
+          ],
+        ).paddingOnly(bottom: 80),
 
         //send text field
         bottomSheet: sendTextField(),

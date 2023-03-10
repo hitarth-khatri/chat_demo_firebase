@@ -6,6 +6,7 @@ import 'app/routes/app_pages.dart';
 import 'app/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,7 @@ Future<void> main() async {
   };
 
   runApp(const MyApp());
+  configLoading();
 }
 
 class MyApp extends StatelessWidget {
@@ -42,6 +44,23 @@ class MyApp extends StatelessWidget {
       ),
       home: const SplashScreen(),
       getPages: AppPages.pages,
+      builder: EasyLoading.init(),
     );
   }
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..displayDuration = const Duration(milliseconds: 3000)
+    ..indicatorType = EasyLoadingIndicatorType.circle
+    ..loadingStyle = EasyLoadingStyle.custom
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.white
+    ..indicatorColor = Colors.white
+    ..backgroundColor = Colors.orangeAccent
+    ..textColor = Colors.white
+    ..maskColor = Colors.deepOrange.withOpacity(0.5)
+    ..userInteractions = false
+    ..dismissOnTap = true;
 }
