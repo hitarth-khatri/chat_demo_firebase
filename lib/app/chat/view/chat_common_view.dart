@@ -73,7 +73,7 @@ messageTile({
           width: width / 1.6,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: AppColors.orange50,
+            color: AppColors.teal100,
           ),
           child: ListTile(
             title: Text(message),
