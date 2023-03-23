@@ -5,6 +5,7 @@ import 'package:chat_demo_firebase/common/constants/app_strings.dart';
 import 'package:chat_demo_firebase/common/constants/firebase_constants.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -19,7 +20,7 @@ class ChatController extends GetxController {
   String chatRoomId = "";
 
   late Query chatDbQuery;
-  late dynamic imagesRef;
+  late Reference imagesRef;
 
   var senderId = Get.arguments["senderId"] ?? "";
   String senderEmail = Get.arguments["senderEmail"] ?? "";
@@ -98,9 +99,14 @@ class ChatController extends GetxController {
   ///send image from gallery
   requestGallery() async {
     removeFocus();
-    var status = await Permission.storage.request();
-    if (status.isGranted) {
-      printDebug(value: "Permission Granted");
+    PermissionStatus? status;
+
+    defaultTargetPlatform == TargetPlatform.iOS
+        ? status = await Permission.photos.request()
+        : status = await Permission.storage.request();
+
+    if (status.isGranted || status.isLimited) {
+      printDebug(value: "Permission Granted or limited");
 
       galleryImage = await ImagePicker().pickImage(
         source: ImageSource.gallery,
@@ -115,12 +121,15 @@ class ChatController extends GetxController {
         imageFile.value = File(imgPath.value);
         uploadFile();
       }
-    } else if (status.isPermanentlyDenied) {
-      printDebug(value: "Permission Denied");
+    } else if (status.isPermanentlyDenied || status.isDenied) {
+      printDebug(value: "Permission Denied or permanently");
       Get.defaultDialog(
         middleText: "Permission denied",
         confirm: TextButton(
-          onPressed: () => openAppSettings(),
+          onPressed: () {
+            Get.back();
+            openAppSettings();
+          },
           child: const Text("open setting"),
         ),
       );
@@ -129,7 +138,14 @@ class ChatController extends GetxController {
 
   //upload file to storage
   Future uploadFile() async {
-    UploadTask uploadTask = imagesRef.putFile(imageFile.value);
+    final SettableMetadata metadata = SettableMetadata(
+      contentType: "image/jpeg",
+    );
+
+    UploadTask uploadTask = imagesRef.putData(
+      await imageFile.value.readAsBytes(),
+      metadata,
+    );
 
     uploadTask.snapshotEvents.listen((event) async {
       switch (event.state) {
