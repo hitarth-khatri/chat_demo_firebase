@@ -52,6 +52,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '426246823212',
     projectId: 'chat-demo-372ed',
     authDomain: 'chat-demo-372ed.firebaseapp.com',
+    databaseURL: 'https://chat-demo-372ed-default-rtdb.firebaseio.com',
     storageBucket: 'chat-demo-372ed.appspot.com',
     measurementId: 'G-6SXWVFD95W',
   );
@@ -61,6 +62,7 @@ class DefaultFirebaseOptions {
     appId: '1:426246823212:android:ddd7a0a6cacda4b512e089',
     messagingSenderId: '426246823212',
     projectId: 'chat-demo-372ed',
+    databaseURL: 'https://chat-demo-372ed-default-rtdb.firebaseio.com',
     storageBucket: 'chat-demo-372ed.appspot.com',
   );
 
@@ -69,7 +71,9 @@ class DefaultFirebaseOptions {
     appId: '1:426246823212:ios:b0f1bdf13eca4d6212e089',
     messagingSenderId: '426246823212',
     projectId: 'chat-demo-372ed',
+    databaseURL: 'https://chat-demo-372ed-default-rtdb.firebaseio.com',
     storageBucket: 'chat-demo-372ed.appspot.com',
+    androidClientId: '426246823212-7cma5e4iienlao2h4kipqchdl2sasbgj.apps.googleusercontent.com',
     iosClientId: '426246823212-nh1hfgnniahkjasak29snklj53imm41n.apps.googleusercontent.com',
     iosBundleId: 'com.example.chatDemoFirebase',
   );

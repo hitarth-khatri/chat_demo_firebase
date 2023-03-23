@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "426246823212",
+    "firebase_url": "https://chat-demo-372ed-default-rtdb.firebaseio.com",
     "project_id": "chat-demo-372ed",
     "storage_bucket": "chat-demo-372ed.appspot.com"
   },
@@ -14,7 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "426246823212-6vp0au2i211shjrti1vmgfbop67ptrvo.apps.googleusercontent.com",
+          "client_id": "426246823212-7cma5e4iienlao2h4kipqchdl2sasbgj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chat_demo_firebase",
+            "certificate_hash": "462d3f76472d9a09384f5b9efc437883155d00e4"
+          }
+        },
+        {
+          "client_id": "426246823212-tj47ru1qio48se1qkdbd49ojdp721inf.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

@@ -12,6 +12,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
+    name: "chat-demo", // app name in firebase project
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
